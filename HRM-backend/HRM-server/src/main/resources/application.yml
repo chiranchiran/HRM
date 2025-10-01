@@ -1,0 +1,73 @@
+spring:
+  application:
+    name: HRM-server
+  # MySQL配置
+  datasource:
+    url: jdbc:mysql://192.168.218.128:3306/hrm
+    username: root
+    password: 654321
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 10  # 最大连接数
+      minimum-idle: 5        # 最小空闲连接
+      idle-timeout: 300000   # 空闲连接超时时间（5分钟）
+      connection-timeout: 20000  # 连接超时时间（20秒）
+  # Redis配置
+  data:
+    redis:
+      host: 192.168.218.128
+      port: 6379
+      password: 654321
+      database: 0
+      timeout: 2000
+      lettuce:
+        pool:
+          max-active: 8    # 最大连接数
+          max-idle: 8      # 最大空闲连接
+          min-idle: 2      # 最小空闲连接
+          max-wait: -1     # 最大等待时间（-1表示无限制）
+
+# 日志配置
+logging:
+  level:
+    org.springframework.jdbc.support.JdbcTransactionManager: DEBUG # 开启事务日志
+#    org.springframework.jdbc: DEBUG        # 开启Mysql详细日志
+    org.springframework.data.redis: DEBUG # 开启redis日志
+
+
+# MyBatis 配置
+mybatis:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 指定日志输出控制台
+    map-underscore-to-camel-case: true                    # 开启驼峰命名映射
+
+# MyBatis-plus 配置
+mybatis-plus:
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl  # 指定日志输出控制台
+    map-underscore-to-camel-case: true                    # 开启驼峰命名映射
+  global-config:
+    banner: false                                          # 关闭图标
+    db-config:
+      id-type: assign_id
+      logic-delete-field: deleted
+      logic-not-delete-value: 0
+      logic-delete-value: 1
+
+#jwt配置
+jwt:
+  secretKey: 235
+  issuer: "HRM"
+  access-token:
+    header: "Authorization"
+    secret: ert
+    expiration: 15m  # 过期时间15分钟
+  refresh-token:
+    header: "Refresh-Token"
+    secret: df
+    expiration: 7d  # 过期时间7天
+  prefix: "Bearer"
+  redis:
+    enable: true
+    key-prefix: "refresh_token:"
+

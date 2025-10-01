@@ -1,0 +1,37 @@
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url(../../assets/login.jpg) no-repeat fixed center / cover;
+
+  .container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 5%;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+
+    .ant-pro-form-login-desc {
+      margin-block-end: 20px;
+    }
+
+    .ant-tabs .ant-tabs-tab+.ant-tabs-tab {
+      margin: 0 0 0 85px;
+    }
+
+    .ant-space-gap-col-small {
+      column-gap: 16px;
+    }
+
+    .otherLogin {
+      font-size: 16px;
+      text-align: center;
+      padding: 3px 24px 24px;
+      color: rgba(0, 0, 0, 0.65);
+    }
+  }
+}

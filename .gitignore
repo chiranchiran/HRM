@@ -1,0 +1,121 @@
+# =============================================
+# HRM-frontend 前端项目忽略规则
+# =============================================
+
+# 日志文件
+HRM-frontend/logs
+HRM-frontend/*.log
+HRM-frontend/npm-debug.log*
+HRM-frontend/yarn-debug.log*
+HRM-frontend/yarn-error.log*
+HRM-frontend/pnpm-debug.log*
+HRM-frontend/lerna-debug.log*
+
+# 依赖与构建产物
+HRM-frontend/node_modules
+HRM-frontend/dist
+HRM-frontend/dist-ssr
+HRM-frontend/*.local
+
+# Editor 目录和文件
+HRM-frontend/.vscode/*
+!HRM-frontend/.vscode/extensions.json
+HRM-frontend/.idea
+HRM-frontend/.DS_Store
+HRM-frontend/*.suo
+HRM-frontend/*.ntvs*
+HRM-frontend/*.njsproj
+HRM-frontend/*.sln
+HRM-frontend/*.sw?
+
+# =============================================
+# HRM-backend 父工程忽略规则
+# =============================================
+
+# 父工程构建输出
+target/
+
+# IDE 配置
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+# 其他构建工具
+build/
+out/
+bin/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =============================================
+# 后端子模块通用忽略规则 (HRM-common, HRM-pojo, HRM-server)
+# =============================================
+
+# 所有子模块的构建输出
+HRM-*/target/
+HRM-*/build/
+
+# 子模块的 IDE 配置
+HRM-*/.idea/
+HRM-*/*.iws
+HRM-*/*.iml
+HRM-*/*.ipr
+HRM-*/.vscode/
+
+# 子模块的其他构建文件
+HRM-*/out/
+HRM-*/bin/
+
+# 子模块的 IDE 特定文件
+HRM-*/.apt_generated
+HRM-*/.classpath
+HRM-*/.factorypath
+HRM-*/.project
+HRM-*/.settings
+HRM-*/.springBeans
+HRM-*/.sts4-cache
+
+# NetBeans 相关
+HRM-*/nbproject/private/
+HRM-*/nbbuild/
+HRM-*/dist/
+HRM-*/nbdist/
+HRM-*/.nb-gradle/
+
+# =============================================
+# 必须保留的文件（显式声明）
+# =============================================
+
+# 父工程保留 Maven Wrapper 和帮助文件
+!mvnw
+!mvnw.cmd
+!.mvn/
+!HELP.md
+!README.md
+
+# 保留所有 pom.xml 文件
+!**/pom.xml
+
+# 保留所有源码目录
+!**/src/main/java/
+!**/src/main/resources/
+!**/src/test/java/
+!**/src/test/resources/
+
+# 前端需要保留的重要文件
+!HRM-frontend/package.json
+!HRM-frontend/package-lock.json
+!HRM-frontend/yarn.lock
+!HRM-frontend/*.config.js
+!HRM-frontend/*.config.ts
+!HRM-frontend/vite.config.*
+!HRM-frontend/vue.config.*
+!HRM-frontend/tsconfig.json
+!HRM-frontend/index.html
+!HRM-frontend/public/
+!HRM-frontend/src/
