@@ -56,16 +56,16 @@ mybatis-plus:
 
 #jwt配置
 jwt:
-  secretKey: 235
   issuer: "HRM"
   access-token:
     header: "Authorization"
-    secret: ert
-    expiration: 15m  # 过期时间15分钟
+    expiration: 900000  # 过期时间15分钟
+    privatePath: "E:\study\my_works\HRM\config\secret\access-private.key"
+    publicPath: "E:\study\my_works\HRM\config\secret\access-public.key"
   refresh-token:
     header: "Refresh-Token"
-    secret: df
-    expiration: 7d  # 过期时间7天
+    expiration: 604800000  # 过期时间7天
+    publicPath: "E:\study\my_works\HRM\config\secret\refresh-public.key"
   prefix: "Bearer"
   redis:
     enable: true
