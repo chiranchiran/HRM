@@ -13,6 +13,12 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<dependencies>
+        <!-- 自定义stater -->
+        <dependency>
+            <groupId>com.chiran</groupId>
+            <artifactId>myUtils-spring-boot-starter</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
         <!-- Spring起步依赖 -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AppstoreOutlined,
   BarChartOutlined,
@@ -8,8 +8,10 @@ import {
   UploadOutlined,
   UserOutlined,
   VideoCameraOutlined,
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
 } from '@ant-design/icons';
-import { Layout, Menu, theme } from 'antd';
+import { Button, Layout, Menu, theme } from 'antd';
 import { Outlet } from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
@@ -37,7 +39,10 @@ const items = [
   label: `nav ${index + 1}`,
 }));
 
+
 const Main = () => {
+  const [collapsed, setCollapsed] = useState(false)
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();

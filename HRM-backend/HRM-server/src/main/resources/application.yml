@@ -30,9 +30,14 @@ spring:
 # 日志配置
 logging:
   level:
+    root: INFO  # 全局级别
+    com.chiran: DEBUG
+
     org.springframework.jdbc.support.JdbcTransactionManager: DEBUG # 开启事务日志
-#    org.springframework.jdbc: DEBUG        # 开启Mysql详细日志
+    #    org.springframework.jdbc: DEBUG        # 开启Mysql详细日志
     org.springframework.data.redis: DEBUG # 开启redis日志
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n"
 
 
 # MyBatis 配置
@@ -60,12 +65,12 @@ jwt:
   access-token:
     header: "Authorization"
     expiration: 900000  # 过期时间15分钟
-    privatePath: "E:\study\my_works\HRM\config\secret\access-private.key"
-    publicPath: "E:\study\my_works\HRM\config\secret\access-public.key"
+    privatePath: "E:/study/my_works/HRM/config/secret/access-private.key"
+    publicPath: "E:/study/my_works/HRM/config/secret/access-public.key"
   refresh-token:
     header: "Refresh-Token"
     expiration: 604800000  # 过期时间7天
-    publicPath: "E:\study\my_works\HRM\config\secret\refresh-public.key"
+    secretPath: "E:/study/my_works/HRM/config/secret/refresh-secret.key"
   prefix: "Bearer"
   redis:
     enable: true

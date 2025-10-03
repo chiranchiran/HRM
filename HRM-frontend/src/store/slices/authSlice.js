@@ -61,7 +61,7 @@ const authSlice = createSlice({
         state.id = action.payload.id
         state.role = action.payload.role
         state.isAuthenticated = true
-        setLoginData(action.payload.accessToken)
+        setLoginData(action.payload.accessToken, action.payload.refreshToken)
       })
       //refresh失败
       .addCase(refreshToken.rejected, (state, action) => {

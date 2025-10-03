@@ -18,9 +18,9 @@ function Protect({ children }) {
       navigate('/login')
       notification.info({ message: "请先登录!" })
     }
-    return children
-  }, [isAuthenticated])
 
+  }, [isAuthenticated])
+  return children
 }
 
 //路由配置

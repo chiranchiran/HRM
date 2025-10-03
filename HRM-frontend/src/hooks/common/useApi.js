@@ -29,7 +29,7 @@ export const useApi = (apiFunc, {
     logger.debug("请求成功")
     //配置文件handler
     const handler = successConfig.handler
-    if (handler && typeofhandler === 'function') {
+    if (handler && typeof handler === 'function') {
       logger.debug("成功handler开始执行", data)
       handler(data, dispatch, navigate)
     }
