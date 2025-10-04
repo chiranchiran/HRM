@@ -15,7 +15,7 @@ export const HTTP_ERROR_MAP = {
   429: { type: 'CLIENT_ERROR', level: 'warn', message: '请求过于频繁' },
 
   // 5xx 
-  500: { type: 'SERVER_ERROR', level: 'error', message: '服务器错误' },
+  500: { type: 'SERVER_ERROR', level: 'error', message: '服务器出现错误，请稍后重试' },
   502: { type: 'SERVER_ERROR', level: 'error', message: '网关错误' },
   503: { type: 'SERVER_ERROR', level: 'error', message: '服务暂时不可用' },
   504: { type: 'SERVER_ERROR', level: 'error', message: '网关超时' }
@@ -31,8 +31,8 @@ export const BUSINESS_ERROR_MAP = {
 
   // 认证与授权 (11000-11999)
   11000: { type: 'AUTH_ERROR', level: 'error', message: '登录已失效，请重新登录' },
-  11001: { type: 'AUTH_ERROR', level: 'error', message: '您没有权限执行此操作' },
-  11002: { type: 'AUTH_ERROR', level: 'error', message: '请先登录' },
+  11001: { type: 'AUTH_ERROR', level: 'error', message: '您还没有登录，无法进行操作' },
+  11002: { type: 'AUTH_ERROR', level: 'error', message: '您没有权限执行此操作' },
   11003: { type: 'AUTH_ERROR', level: 'error', message: '登录失败次数过多，请30分钟后重试' },
 
   // 用户模块 (12000-12999)

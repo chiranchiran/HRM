@@ -1,18 +1,26 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  AppstoreOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  ShopOutlined,
-  TeamOutlined,
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-  MenuFoldOutlined,
   MenuUnfoldOutlined,
+  MenuFoldOutlined,
+  HomeOutlined,
+  TeamOutlined,
+  UserSwitchOutlined,
+  UserOutlined,
+  SafetyCertificateOutlined,
+  ScheduleOutlined,
+  FileDoneOutlined,
+  DollarOutlined,
+  InsuranceOutlined,
+  MessageOutlined,
 } from '@ant-design/icons';
-import { Button, Layout, Menu, theme } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Avatar, Badge, Breadcrumb, Button, Layout, Menu, Space, theme } from 'antd';
+import { NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom';
+import './index.less'
+import { logger } from '../../utils/logger';
+import { useSelector } from 'react-redux';
+import NavDateTime from '../common/NavDateTime';
+import NavCalendar from '../common/NavCalendar';
+
 const { Header, Content, Footer, Sider } = Layout;
 const siderStyle = {
   overflow: 'auto',
@@ -24,24 +32,59 @@ const siderStyle = {
   scrollbarWidth: 'thin',
   scrollbarGutter: 'stable',
 };
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  BarChartOutlined,
-  CloudOutlined,
-  AppstoreOutlined,
-  TeamOutlined,
-  ShopOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
-}));
 
+const items = [
+  { key: '/dashboard', icon: React.createElement(HomeOutlined), label: '首页' },
+  { key: '/department', icon: React.createElement(TeamOutlined), label: '部门', },
+  { key: '/role', icon: React.createElement(UserSwitchOutlined), label: '角色', },
+  { key: '/emploee', icon: React.createElement(UserOutlined), label: '员工', },
+  { key: '/permission', icon: React.createElement(SafetyCertificateOutlined), label: '权限', },
+  { key: '/attendance', icon: React.createElement(ScheduleOutlined), label: '考勤', },
+  { key: '/approval', icon: React.createElement(FileDoneOutlined), label: '审批', },
+  { key: '/salary', icon: React.createElement(DollarOutlined), label: '工资', },
+  { key: '/social', icon: React.createElement(InsuranceOutlined), label: '社保', }
+]
 
 const Main = () => {
   const [collapsed, setCollapsed] = useState(false)
+  const [calendar, setCalendar] = useState(false)
+  const { id, username } = useSelector(state => state.auth)
+  const [breadList, setBreadList] = useState(["首页"])
+  const path = useLocation().pathname
+  const navigate = useNavigate()
+  const bread = breadList.map((i) => {
+    if (i === "首页") {
+      return { title: '首页' }
+    }
+    return { title: <NavLink to={findKey(i)}>{i}</NavLink> }
+  })
+  //根据路径找label
+  const findLabel = i => {
+    const item = items.find((path) => path.key === "/" + i)
+    if (!item) {
+      return 0
+    }
+    return item.label
+  }
+  //根据label找key
+  const findKey = i => {
+    const item = items.find(path => path.label === i)
+    return item.key
+  }
+
+  useEffect(() => {
+    logger.debug("当前路径是", path)
+    const arr = ["首页"]
+    path.split("/").forEach(item => {
+      const label = findLabel(item)
+      if (label && label !== "首页") arr.push(label)
+    })
+    setBreadList(arr)
+  }, [path])
+
+  const changeTab = ({ item, key, keyPath, domEvent }) => {
+    navigate(key)
+  }
 
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -49,8 +92,8 @@ const Main = () => {
   return (
     <Layout hasSider>
       <Sider trigger={null} collapsible collapsed={collapsed} style={siderStyle}>
-        <div className="demo-logo-vertical" />
-        <Menu theme="dark" mode="inline" defaultSelectedKeys={['4']} items={items} />
+        <div className="demo-logo-vertical">HRM</div>
+        <Menu className="tab-item" theme="dark" mode="inline" onClick={changeTab} defaultSelectedKeys={['1']} items={items} />
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }} >
@@ -64,9 +107,24 @@ const Main = () => {
               height: 64,
             }}
           />
+          <Breadcrumb
+            className='bread'
+            items={bread}
+          />
+          <span className="user">
+            <Space size={16} wrap>
+              <NavDateTime onClick={() => setCalendar(!calendar)} />
+              <Badge size="small" count={78} overflowCount={99}>
+                <Avatar size="middle" icon={<MessageOutlined />} />
+              </Badge>
+              <Avatar style={{ backgroundColor: '#87d068' }} icon={<UserOutlined />} />
+            </Space>
+            <span>{username}</span>
+          </span>
+          {calendar && <NavCalendar />}
         </Header>
         <Content style={{ margin: '24px 16px 0', overflow: 'initial' }}>
-          <div
+          {/* <div
             style={{
               padding: 24,
               textAlign: 'center',
@@ -74,8 +132,9 @@ const Main = () => {
               borderRadius: borderRadiusLG,
             }}
           >
-            <Outlet />
-          </div>
+           
+          </div> */}
+          <Outlet />
         </Content>
         <Footer style={{ textAlign: 'center' }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED

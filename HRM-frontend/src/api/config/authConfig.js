@@ -1,18 +1,14 @@
 import { loginFailure, loginSuccess, logout } from "../../store/slices/authSlice"
-import { setLoginData } from "../../utils/localStorage"
 
 const onSuccess = (data, dispatch, navigate) => {
-  const { id, username, role, accessToken, refreshToken } = data
-  setLoginData(accessToken, refreshToken)
-  dispatch(loginSuccess({ username, id, role }))
+  dispatch(loginSuccess(data))
   navigate('/dashboard')
 }
 const onError = (error, dispatch) => {
   dispatch(loginFailure())
 }
 const onAutoSuccess = (data, dispatch, navigate) => {
-  const { id, username, role } = data
-  dispatch(loginSuccess({ username, id, role }))
+  dispatch(loginSuccess(data))
   navigate('/dashboard')
 }
 const onAutoError = (error, dispatch, navigate) => {

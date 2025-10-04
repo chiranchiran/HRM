@@ -29,11 +29,9 @@ function Element() {
     {
       path: "/login",
       element: <Login />
-    }, {
-      path: "/",
-      element: <Navigate to="/login" />
     }
     , {
+      path: "/",
       element: <Protect><Main /></Protect>,
       children: [{
         path: '/dashboard',

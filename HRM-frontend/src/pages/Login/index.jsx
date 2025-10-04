@@ -22,7 +22,9 @@ import './index.less'
 import { useForm } from 'antd/es/form/Form';
 import { logger } from '../../utils/logger';
 import { useCaptcha, useLoginByCount, useLoginByMobile } from '../../hooks/api/auth';
-import { getAutoLoginData, removeAutoLoginData, setAutoLoginData } from '../../utils/localStorage';
+import { getUserData } from '../../utils/localStorage';
+import { useDispatch } from 'react-redux';
+import { setAutoLogin } from '../../store/slices/authSlice';
 
 export default function Login() {
   const { token } = theme.useToken()
@@ -30,6 +32,7 @@ export default function Login() {
   const { mutate: getCaptcha, isSuccess: isCaptcha } = useCaptcha()
   const { mutate: countLogin, isSuccess: isCount } = useLoginByCount()
   const { mutate: phoneLogin, isSuccess: isPhone } = useLoginByMobile()
+  const dispatch = useDispatch()
   //登录方式0：账号密码，1：手机号，
   const [loginType, setLoginType] = useState(0);
   //其他登录方式css
@@ -66,19 +69,19 @@ export default function Login() {
   }
 
   //保存自动登录
-  const setAutologin = (autoLogin) => {
+  const setAutologinState = (autoLogin) => {
     // 存储自动登录相关数据
     if (autoLogin) {
-      setAutoLoginData(true, null, username)
+      dispatch(setAutoLogin({ rememberMe: autoLogin }))
     } else {
       // 清除自动登录数据
-      removeAutoLoginData()
+      dispatch(setAutoLogin({ rememberMe: null, autoLoginExpire: -1 }))
     }
   }
   //自动登录失败后只填入用户名
   useEffect(() => {
-    const [rememberMe, autoLoginExpire, username] = getAutoLoginData()
-    if (rememberMe === 'true' && autoLoginExpire) {
+    const { rememberMe, autoLoginExpire, username } = getUserData()
+    if (rememberMe === true && autoLoginExpire) {
       //检查是否过有效期
       if (Date.now() < autoLoginExpire) {
         form.setFieldsValue({
@@ -96,13 +99,13 @@ export default function Login() {
       const { username, password, autoLogin } = values
       logger.debug("开始登录", { username, password })
       countLogin({ username, password })
-      if (isCount) setAutologin(autoLogin)
+      if (isCount) setAutologinState(autoLogin)
       //手机号登录
     } else {
       const { phone, captcha, autoLogin } = values
       logger.debug("开始登录", { phone, captcha })
       phoneLogin({ phone, captcha })
-      if (isPhone) setAutologin(autoLogin)
+      if (isPhone) setAutologinState(autoLogin)
     }
   }
 

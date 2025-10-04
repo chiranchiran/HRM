@@ -3,6 +3,7 @@ import { store } from "../store";
 import { logout, refreshToken } from "../store/slices/authSlice";
 import { logger } from "../utils/logger";
 import { ErrorFactory } from "../utils/error/errorType";
+import { getLoginData } from "../utils/localStorage";
 
 const service = axios.create({
   baseURL: "/api",
@@ -179,6 +180,12 @@ const handleAuthError = async (config, errorInfo) => {
     return Promise.reject(authError)
   }
   logger.warn('401请求错误，尝试刷新token', errorInfo);
+  //检查是否有refreshToken
+  const { refreshToken } = getLoginData()
+  if (!refreshToken) {
+    return Promise.reject(ErrorFactory.business({ code: 11001 }))
+  }
+
   config._retry = true
   try {
     if (!refreshing) {
@@ -186,9 +193,9 @@ const handleAuthError = async (config, errorInfo) => {
       logger.warn('开始刷新token');
     }
     await refreshing
-    const token = localStorage.getItem("accessToken")
-    logger.info('刷新token成功', token)
-    config.headers.Authorization = `Bearer ${token}`
+    const { accessToken } = getLoginData()
+    logger.info('刷新token成功', accessToken)
+    config.headers.Authorization = `Bearer ${accessToken}`
     return service(config)
   } catch (e) {
     logger.warn('刷新token失败', e.message);

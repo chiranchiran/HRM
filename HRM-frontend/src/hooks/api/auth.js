@@ -1,5 +1,5 @@
 import { getCaptcha, loginCount, loginMobile, validate } from "../../api/modules/auth"
-import { getLoginData } from "../../utils/localStorage"
+import { getLoginData, getUserData } from "../../utils/localStorage"
 import { useApi } from "../common/useApi"
 
 export const useLoginByCount = (params, options = {}) => {
@@ -21,7 +21,7 @@ export const useLoginByMobile = (params, options = {}) => {
   })
 }
 export const useAutoLogin = (params, options = {}) => {
-  const accessToken = getLoginData()[0]
+  const { accessToken } = getLoginData()
   return useApi(validate, {
     module: 'auth',
     apiName: 'auto',

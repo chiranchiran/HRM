@@ -3,6 +3,10 @@ package com.chiran.handler;
 import com.chiran.exception.BusinessException;
 import com.chiran.result.Result;
 import com.chiran.utils.ExceptionUtil;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -26,16 +30,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    /**
-     * 处理业务异常
-     */
-    @ExceptionHandler(BusinessException.class)
-    public Result<Object> handleBusinessException(BusinessException e, HttpServletRequest request) {
-        log.warn("业务异常 - 路径: {}, 错误码: {}, 消息: {}",
-                request.getRequestURI(), e.getCode(), e.getMessage());
+    private static Result<Object> resForSystem = Result.error(10000, ExceptionUtil.getMessage(10000));
 
-        return Result.error(e.getCode(), e.getMessage());
-    }
+
 
     /**
      * 处理参数校验异常 - @RequestBody参数校验
@@ -122,19 +119,30 @@ public class GlobalExceptionHandler {
     /**
      * 处理JWT相关异常
      */
-    @ExceptionHandler(io.jsonwebtoken.JwtException.class)
-    public Result<Object> handleJwtException(io.jsonwebtoken.JwtException e, HttpServletRequest request) {
+    @ExceptionHandler(JwtException.class)
+    public ResponseEntity handleJwtException(JwtException e, HttpServletRequest request) {
         log.warn("JWT异常 - 路径: {}, 错误: {}", request.getRequestURI(), e.getMessage());
+        return new ResponseEntity<>(null,HttpStatus.UNAUTHORIZED);
+    }
 
-        // 根据JWT异常类型返回对应的业务异常
-        if (e instanceof io.jsonwebtoken.ExpiredJwtException) {
-            return Result.error(11000, ExceptionUtil.getMessage(11000));
-        } else if (e instanceof io.jsonwebtoken.MalformedJwtException ||
-                e instanceof io.jsonwebtoken.security.SignatureException) {
-            return Result.error(11006, ExceptionUtil.getMessage(11006));
-        } else {
-            return Result.error(11004, ExceptionUtil.getMessage(11004));
-        }
+    /**
+     * 处理业务异常
+     */
+    @ExceptionHandler(BusinessException.class)
+    public Result<Object> handleBusinessException(BusinessException e, HttpServletRequest request) {
+        log.warn("业务异常 - 路径: {}, 错误码: {}, 消息: {}",
+                request.getRequestURI(), e.getCode(), e.getMessage());
+
+        return Result.error(e.getCode(), e.getMessage());
+    }
+
+    /**
+     * 处理运行时的异常，主要是后端异常
+     */
+    @ExceptionHandler(RuntimeException.class)
+    public Result<Object> handleRuntimeException(RuntimeException e, HttpServletRequest request) {
+        log.error("运行时异常 - 路径: {}, 错误: {}", request.getRequestURI(), e.getMessage());
+        return resForSystem;
     }
 
     /**
@@ -145,8 +153,6 @@ public class GlobalExceptionHandler {
         String path = request.getRequestURI();
         log.error("系统异常 - 路径: {}, 异常类型: {}, 错误消息: {}",
                 path, e.getClass().getName(), e.getMessage(), e);
-        // 生产环境可以返回统一的错误信息，避免泄露系统细节
-        String message = ExceptionUtil.getMessage(10000);
-        return Result.error(10000, message);
+        return resForSystem;
     }
 }
